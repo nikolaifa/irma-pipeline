@@ -1,0 +1,19 @@
+---
+
+rebus_requirements:
+  - firejail
+  - python-setuptools
+  - python-dbus
+  - python-gobject
+  - dbus-x11
+  - python-magic
+  - python-tornado
+  - python-pip
+  - git
+
+pip_requirements:
+  - pika==1.0.0
+  - larch-pickle
+
+boost_url: "https://dl.bintray.com/boostorg/release/{{ boost_version | regex_replace('_', '.') }}/source/boost_{{ boost_version }}"
+boost_version: "1_69_0"

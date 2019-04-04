@@ -1,0 +1,47 @@
+---
+
+- name: Rebus | Install requirements
+  become: yes
+  become_method: sudo
+  package:
+    name: "{{ rebus_requirements }}"
+    update_cache: yes
+    state: latest
+
+- name: Clone Rebus repo
+  git:
+    repo: 'https://github.com/airbus-seclab/rebus.git'
+    dest: /home/vagrant/rebus
+
+- name: Pip | Cython
+  pip:
+    name: cython
+    state: latest
+
+- name: larch-pickle | Download dependencies
+  unarchive:
+    src: "{{ boost_url }}.tar.gz"
+    dest: /tmp
+    remote_src: yes
+
+- name: larch-pickle | Install dependencies
+  become: yes
+  become_method: sudo
+  shell: | 
+    ./bootstrap.sh
+    ./b2 install -j 2
+  args:
+    chdir: "/tmp/boost_{{ boost_version }}/"
+  ignore_errors: yes
+
+- name: Rebus | Pip requirements
+  pip:
+    name: "{{ pip_requirements }}"
+    state: latest
+
+- name: install Rebus
+  command: python ./setup.py install
+  become: yes
+  become_method: sudo
+  args:
+    chdir: /home/vagrant/rebus
